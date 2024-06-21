@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: Rule Tile
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 2121265152, guid: b6ad3875100a1f44cbe42cdefb9f4123, type: 3}
+  m_DefaultSprite: {fileID: 642548098, guid: b6ad3875100a1f44cbe42cdefb9f4123, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
@@ -53,7 +53,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: -1, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
-    m_RuleTransform: 0
+    m_RuleTransform: 1
   - m_Id: 1
     m_Sprites:
     - {fileID: 114644613, guid: b6ad3875100a1f44cbe42cdefb9f4123, type: 3}
