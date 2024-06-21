@@ -44,6 +44,12 @@ TagManager:
   - name: Background Layer
     uniqueID: 1672319655
     locked: 0
+  - name: Water Layer
+    uniqueID: 2586570731
+    locked: 0
   - name: Platform Layer
     uniqueID: 4137914525
+    locked: 0
+  - name: Player
+    uniqueID: 2281099271
     locked: 0
