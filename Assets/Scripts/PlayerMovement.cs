@@ -34,7 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(isDashing){
+        if (isDashing)
+        {
             return;
         }
         Run();
@@ -43,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(isDashing){return;}
+        if (isDashing) { return; }
     }
 
     void OnMove(InputValue value)
