@@ -10,26 +10,32 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float runSpeed;
     [SerializeField] float jumpSpeed;
+    [SerializeField] float climbSpeed;
+
     [SerializeField] float dashSpeed;
     [SerializeField] float dashTime;
     [SerializeField] float dashCooldown;
 
     private bool canDash = true;
     private bool isDashing;
+    float gravity;
 
 
     Vector2 moveInput;
-    Rigidbody2D rgbd;
-    CapsuleCollider2D capsuleCollider;
+    Rigidbody2D rb;
+    CapsuleCollider2D cc;
+    BoxCollider2D bc;
     Animator animator;
     TrailRenderer tr;
 
     void Start()
     {
-        rgbd = GetComponent<Rigidbody2D>();
-        capsuleCollider = GetComponent<CapsuleCollider2D>();
+        rb = GetComponent<Rigidbody2D>();
+        cc = GetComponent<CapsuleCollider2D>();
+        bc = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         tr = GetComponent<TrailRenderer>();
+        gravity = rb.gravityScale;
     }
 
     void Update()
@@ -40,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         }
         Run();
         FlipSprite();
+        ClimbLadder();
     }
 
     void FixedUpdate()
@@ -54,45 +61,70 @@ public class PlayerMovement : MonoBehaviour
 
     void Run()
     {
-        Vector2 playerVelocity = new Vector2(moveInput.x * runSpeed, rgbd.velocity.y);
-        rgbd.velocity = playerVelocity;
+        Vector2 playerVelocity = new Vector2(moveInput.x * runSpeed, rb.velocity.y);
+        rb.velocity = playerVelocity;
 
-        bool playerHasHorizontalSpeed = Mathf.Abs(rgbd.velocity.x) > Mathf.Epsilon;
+        bool playerHasHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
         animator.SetBool("isRunning", playerHasHorizontalSpeed);
 
     }
 
     void FlipSprite()
     {
-        bool playerHasHorizontalSpeed = Mathf.Abs(rgbd.velocity.x) > Mathf.Epsilon;
+        bool playerHasHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
 
         if (playerHasHorizontalSpeed)
         {
-            transform.localScale = new Vector2(Mathf.Sign(rgbd.velocity.x), 1f);
+            transform.localScale = new Vector2(Mathf.Sign(rb.velocity.x), 1f);
         }
     }
 
     void OnJump(InputValue value)
     {
-        if (value.isPressed && capsuleCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (!bc.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
-            rgbd.velocity += new Vector2(0f, jumpSpeed);
+            return;
+        }
+        if (value.isPressed)
+        {
+            rb.velocity += new Vector2(0f, jumpSpeed);
         }
     }
 
     private IEnumerator OnDash()
     {
-        canDash = false;
-        isDashing = true;
-        float orginalGravity = rgbd.gravityScale;
-        rgbd.gravityScale = 0f;
-        rgbd.velocity = new Vector2(transform.localScale.x * dashSpeed, 0f);
-        tr.emitting = true;
-        yield return new WaitForSeconds(dashTime);
-        tr.emitting = false;
-        rgbd.gravityScale = orginalGravity;
-        isDashing = false;
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
+        if (canDash)
+        {
+            canDash = false;
+            isDashing = true;
+            rb.gravityScale = 0f;
+            rb.velocity = new Vector2(transform.localScale.x * dashSpeed, 0f);
+            tr.emitting = true;
+            yield return new WaitForSeconds(dashTime);
+            tr.emitting = false;
+            rb.gravityScale = gravity;
+            isDashing = false;
+            yield return new WaitForSeconds(dashCooldown);
+            canDash = true;
+        }
+    }
+
+    void ClimbLadder()
+    {
+        if (!cc.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+        {
+            rb.gravityScale = gravity;
+
+            animator.SetBool("isClimbing", false);
+
+            return;
+        }
+
+        Vector2 climbLadder = new Vector2(rb.velocity.x, moveInput.y * climbSpeed);
+        rb.velocity = climbLadder;
+        rb.gravityScale = 0f;
+
+        bool playerHasVerticalSpeed = Mathf.Abs(moveInput.y) > Mathf.Epsilon;
+        animator.SetBool("isClimbing", playerHasVerticalSpeed);
     }
 }
