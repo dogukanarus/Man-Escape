@@ -15,9 +15,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashSpeed;
     [SerializeField] float dashTime;
     [SerializeField] float dashCooldown;
+    [SerializeField] Vector2 deathKick;
 
     private bool canDash = true;
     private bool isDashing;
+    bool isAlive = true;
     float gravity;
 
 
@@ -40,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!isAlive) { return; }
         if (isDashing)
         {
             return;
@@ -47,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         Run();
         FlipSprite();
         ClimbLadder();
+        PlayerDeath();
     }
 
     void FixedUpdate()
@@ -56,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputValue value)
     {
+        if (!isAlive) { return; }
         moveInput = value.Get<Vector2>();
     }
 
@@ -66,7 +71,6 @@ public class PlayerMovement : MonoBehaviour
 
         bool playerHasHorizontalSpeed = Mathf.Abs(rb.velocity.x) > Mathf.Epsilon;
         animator.SetBool("isRunning", playerHasHorizontalSpeed);
-
     }
 
     void FlipSprite()
@@ -81,35 +85,45 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value)
     {
-        if (!bc.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (!isAlive) { return; }
+
+        if (!bc.IsTouchingLayers(LayerMask.GetMask("Ground", "Climbing")))
         {
             return;
         }
+
         if (value.isPressed)
         {
-            rb.velocity += new Vector2(0f, jumpSpeed);
+            if (bc.IsTouchingLayers(LayerMask.GetMask("Ground", "Climbing")))
+            {
+                rb.gravityScale = gravity;
+                rb.velocity += new Vector2(0f, jumpSpeed);
+            }
+
         }
     }
 
     private IEnumerator OnDash()
     {
-        if (canDash)
+        if (canDash && isAlive)
         {
             canDash = false;
             isDashing = true;
             rb.gravityScale = 0f;
             rb.velocity = new Vector2(transform.localScale.x * dashSpeed, 0f);
             tr.emitting = true;
+            animator.SetBool("isDashing", true);
             yield return new WaitForSeconds(dashTime);
             tr.emitting = false;
             rb.gravityScale = gravity;
             isDashing = false;
+            animator.SetBool("isDashing", false);
             yield return new WaitForSeconds(dashCooldown);
             canDash = true;
         }
     }
 
-    void ClimbLadder()
+    void ClimbLadder()  //Merdivenden platforma geçiş eklenecek. 
     {
         if (!cc.IsTouchingLayers(LayerMask.GetMask("Climbing")))
         {
@@ -126,5 +140,15 @@ public class PlayerMovement : MonoBehaviour
 
         bool playerHasVerticalSpeed = Mathf.Abs(moveInput.y) > Mathf.Epsilon;
         animator.SetBool("isClimbing", playerHasVerticalSpeed);
+    }
+
+    void PlayerDeath()
+    {
+        if (cc.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")))
+        {
+            isAlive = false;
+            rb.velocity = deathKick;
+            animator.SetTrigger("Dying");
+        }
     }
 }

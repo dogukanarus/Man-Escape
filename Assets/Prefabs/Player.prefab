@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9031678526376369530}
   - component: {fileID: 931509700644182643}
   - component: {fileID: 3511071782520884863}
+  - component: {fileID: 8601378908095336262}
   - component: {fileID: 1297720174530951399}
   - component: {fileID: 8073847931763853117}
   - component: {fileID: 5853394878703922703}
@@ -77,7 +78,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2013868025
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: -474515628, guid: 5f706f88c232434489020729442870a3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -138,6 +139,41 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!70 &8601378908095336262
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 287393380236495783}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 837ff19492c266f42b4011bfa5b45708, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.033047676, y: -0.03577137}
+  m_Size: {x: 0.49357033, y: 0.8484745}
+  m_Direction: 0
 --- !u!61 &1297720174530951399
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -170,7 +206,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.036159992, y: -0.065087795}
+  m_Offset: {x: -0.031193733, y: -0.42073917}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -181,7 +217,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4937601, y: 0.78304005}
+  m_Size: {x: 0.44375038, y: 0.104782104}
   m_EdgeRadius: 0
 --- !u!96 &8073847931763853117
 TrailRenderer:
@@ -223,7 +259,7 @@ TrailRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2013868025
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Time: 0.25
   m_PreviewTimeScale: 1
@@ -344,3 +380,4 @@ MonoBehaviour:
   dashSpeed: 22
   dashTime: 0.2
   dashCooldown: 0.5
+  deathKick: {x: 5, y: 15}
